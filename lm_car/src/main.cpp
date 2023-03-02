@@ -91,7 +91,16 @@ float gpsStuff(struct carData* _bmw)
 
 //   }
 // }
-
+void SDheader(fs::FS &fs )
+{
+  File file = fs.open("/log.txt", FILE_APPEND);
+    if(!file){
+        Serial.println("Failed to open file for appending");
+        return;
+    }
+    file.print("speed,latitude,longitude,seconds\n");
+    file.close();
+}
 void logToSD(float speed,struct carData bmw,fs::FS &fs){
   
   File file = fs.open("/log.txt", FILE_APPEND);
@@ -99,7 +108,7 @@ void logToSD(float speed,struct carData bmw,fs::FS &fs){
         Serial.println("Failed to open file for appending");
         return;
     }
-    file.print(bmw.speed);file.print(",");file.print(bmw.lati);file.print(",");file.print(bmw.longi);file.print(",");file.print(millis());file.print(",\n");
+    file.print(bmw.speed);file.print(",");file.print(bmw.lati);file.print(",");file.print(bmw.longi);file.print(",");file.print(millis()/1000);file.print("\n");
     Serial.println("data sent to sd card");
     file.close();
 }
@@ -147,7 +156,7 @@ void setup()
     Serial.print(F("failed, code "));
     Serial.println(state);
   }
-
+  SDheader(SD);
  
 }
 
@@ -173,7 +182,7 @@ void loop()
   Serial.println(output);
   Serial.print("structures data ");
   Serial.println(bmw.speed);
-
+  
   logToSD(speedtemp,bmw,SD); //comenting out due to conflict with radio
   radioStatus = radio.transmit(output);
    if (radioStatus == RADIOLIB_ERR_NONE) {
