@@ -6,6 +6,8 @@
 #include "FS.h" 
 #include "SD.h"
 #include "SPI.h"
+#include "SparkFun_LIS2DH12.h" //Click here to get the library: http://librarymanager/All#SparkFun_LIS2DH12
+SPARKFUN_LIS2DH12 accel;       //Create instance
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 SFE_UBLOX_GNSS myGNSS;
 SX1276 radio = new Module(pin_cs, pin_dio0, pin_nrst, pin_dio1);
@@ -50,10 +52,10 @@ float gpsStuff(struct carData* _bmw)
     Serial.print(F(" Long: "));
     Serial.print(longitude);
 
-    long speed = myGNSS.getGroundSpeed();
+    long speed = myGNSS.getGroundSpeed()/447.04 ;
     Serial.print(F(" Speed: "));
     Serial.print(speed);
-    Serial.print(F(" (mm/s)"));
+    Serial.print(F(" (mph)"));
 
     long heading = myGNSS.getHeading();
     Serial.print(F(" Heading: "));
@@ -98,7 +100,7 @@ void SDheader(fs::FS &fs )
         Serial.println("Failed to open file for appending");
         return;
     }
-    file.print("speed,latitude,longitude,seconds\n");
+    file.print("speed(mph),latitude*10^-7,longitude*10^-7,seconds\n");
     file.close();
 }
 void logToSD(float speed,struct carData bmw,fs::FS &fs){
@@ -111,6 +113,28 @@ void logToSD(float speed,struct carData bmw,fs::FS &fs){
     file.print(bmw.speed);file.print(",");file.print(bmw.lati);file.print(",");file.print(bmw.longi);file.print(",");file.print(millis()/1000);file.print("\n");
     Serial.println("data sent to sd card");
     file.close();
+}
+
+void accelTest()
+{
+   if (accel.available())
+  {
+    float accelX = accel.getX();
+    float accelY = accel.getY();
+    float accelZ = accel.getZ();
+    float tempC = accel.getTemperature();
+
+    Serial.print("Acc [mg]: ");
+    Serial.print(accelX, 1);
+    Serial.print(" x, ");
+    Serial.print(accelY, 1);
+    Serial.print(" y, ");
+    Serial.print(accelZ, 1);
+    Serial.print(" z, ");
+    Serial.print(tempC, 1);
+    Serial.print("C");
+    Serial.println();
+  }
 }
 
 void setup()
@@ -149,15 +173,19 @@ void setup()
   radio.setCurrentLimit(240);
   if (state == RADIOLIB_ERR_NONE)
   {
-    Serial.println(F("success!"));
+    Serial.println(F("radio success!"));
   }
   else
   {
-    Serial.print(F("failed, code "));
+    Serial.print(F("radio failed, code "));
     Serial.println(state);
   }
   SDheader(SD);
  
+  if(accel.begin() == false) //activate accelerometer
+  {
+    Serial.println("accelerometer failed ");
+  }
 }
 
 float speedtemp = -1;
@@ -182,6 +210,7 @@ void loop()
   Serial.println(output);
   Serial.print("structures data ");
   Serial.println(bmw.speed);
+  accelTest();
   
   logToSD(speedtemp,bmw,SD); //comenting out due to conflict with radio
   radioStatus = radio.transmit(output);
