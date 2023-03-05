@@ -18,6 +18,10 @@ struct carData //holds all data about the car
   long speed =-1;
   //tireFR = []
   //tireFL  = []
+  float gx = -1;
+  float gy = -1;
+  float gz = -1;
+  float temper = -1;
 
 };
 void lilText(float data)
@@ -100,7 +104,7 @@ void SDheader(fs::FS &fs )
         Serial.println("Failed to open file for appending");
         return;
     }
-    file.print("speed(mph),latitude*10^-7,longitude*10^-7,seconds\n");
+    file.print("speed(mph),latitude*10^-7,longitude*10^-7,gforcex(mg),gforcey(mg),gforcez(mg),temp(C),seconds\n");
     file.close();
 }
 void logToSD(float speed,struct carData bmw,fs::FS &fs){
@@ -110,12 +114,12 @@ void logToSD(float speed,struct carData bmw,fs::FS &fs){
         Serial.println("Failed to open file for appending");
         return;
     }
-    file.print(bmw.speed);file.print(",");file.print(bmw.lati);file.print(",");file.print(bmw.longi);file.print(",");file.print(millis()/1000);file.print("\n");
+    file.print(bmw.speed);file.print(",");file.print(bmw.lati);file.print(",");file.print(bmw.longi);file.print(",");file.print(bmw.gx);file.print(",");file.print(bmw.gy);file.print(",");file.print(bmw.gz);file.print(",");file.print(bmw.temper);file.print(",");file.print(millis()/1000);file.print("\n");
     Serial.println("data sent to sd card");
     file.close();
 }
 
-void accelTest()
+void accelTest(struct carData* _bmw)
 {
    if (accel.available())
   {
@@ -134,6 +138,12 @@ void accelTest()
     Serial.print(tempC, 1);
     Serial.print("C");
     Serial.println();
+
+    _bmw->gx = accelX; // log the acceleration into the car struct
+    _bmw->gy = accelY;
+    _bmw->gz = accelZ;
+    _bmw->temper = tempC;
+
   }
 }
 
@@ -210,7 +220,7 @@ void loop()
   Serial.println(output);
   Serial.print("structures data ");
   Serial.println(bmw.speed);
-  accelTest();
+  accelTest(&bmw);
   
   logToSD(speedtemp,bmw,SD); //comenting out due to conflict with radio
   radioStatus = radio.transmit(output);
