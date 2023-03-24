@@ -13,9 +13,9 @@ SFE_UBLOX_GNSS myGNSS;
 SX1276 radio = new Module(pin_cs, pin_dio0, pin_nrst, pin_dio1);
 struct carData //holds all data about the car
 {
-  long lati =-1;
-  long longi =-1;
-  long speed =-1;
+  float lati =-1;
+  float longi =-1;
+  float speed =-1;
   //tireFR = []
   //tireFL  = []
   float gx = -1;
@@ -71,7 +71,7 @@ float gpsStuff(struct carData* _bmw)
     Serial.print(pDOP / 100.0, 2); // Convert pDOP scaling from 0.01 to 1
 
     Serial.println("done");
-    _bmw->lati = latitude;
+    _bmw->lati = latitude ;
     _bmw->longi = longitude;
     _bmw->speed = speed;
 
@@ -210,10 +210,11 @@ void loop()
   struct carData bmw;
   
   int radioStatus = -1;
-  speedtemp = gpsStuff(&bmw) / 447.04; // convert  to mph also store gps data in struct
+  speedtemp = gpsStuff(&bmw) ; // convert  to mph also store gps data in struct
   lilText(speedtemp);
   dtostrf(speedtemp,-4,1,speed);
   sprintf(output,"speed %s",speed); // a way to combine a bunch of data into a char array
+  //check out sprintf-arduino https://www.programmingelectronics.com/sprintf-arduino/
   Serial.print("size of payload ");
   Serial.print(sizeof(output));
   Serial.print("payload: ");
