@@ -11,9 +11,11 @@ SPARKFUN_LIS2DH12 accel;       //Create instance
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 SFE_UBLOX_GNSS myGNSS;
 SX1276 radio = new Module(pin_cs, pin_dio0, pin_nrst, pin_dio1);
+//what we give to radio to send out
+char output[256];
 struct carData //holds all data about the car
 {
-  float lati =-1;
+  float lati =-1; //used to be long datatype
   float longi =-1;
   float speed =-1;
   //tireFR = []
@@ -147,6 +149,22 @@ void accelTest(struct carData* _bmw)
   }
 }
 
+void packageData(struct carData bmw) //send the car struct to copy the data to one big string payload for the lora transmit funtion
+{
+  char strSpeed[]= "999.99"; //filling with largest num expected
+  char strLat[]= "160759363xxxx"; 
+  char strLat[]= "-970889757xxx";
+  char strGx[]= "-100000";
+  char strGy[]= "-100000";
+  char strGz[]= "-100000";
+  char strTemp[]= "-10000";
+  char strTime[]= "9999999";
+
+  dtostrf(bmw.speed,-5,1,strSpeed );
+
+  sprintf(output,"speed:%s,lat:%s,lon:%s,gx:%s,gy:%s,gz:%s,temp:%s,sec:%s\n",strSpeed,);
+}
+
 void setup()
 {
   // put your setup code here, to run once:
@@ -199,8 +217,7 @@ void setup()
 }
 
 float speedtemp = -1;
-//what we give to radio to send out
-char output[256];
+
 //converting float to string to send as char array in output
 char speed[5]; // 150.5\0
 
