@@ -9,7 +9,7 @@ accerlerometer code | implemented | moderate | yes |
 OBDII board and code | not implemented, high difficulty | high |no |
 thermal cam mounting | housing and need weather to warm up | moderate | no |
 thermal cam data packaging to go over network | can be started | high |no |
-SD card logging data rate | started | moderate | mostly |
+SD card logging data rate | need to add real time clock from gps to timestamp data | moderate | mostly |
 website to display data | live data? | low | no |
 data graphing | matplotlib for data analysis? | moderate | no |
 
