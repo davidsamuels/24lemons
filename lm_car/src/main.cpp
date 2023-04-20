@@ -26,9 +26,8 @@ struct carData //holds all data about the car
   float temper = -1;
 
 };
-void lilText(float data)
+void lilText(float data) //128x32 resolution
 {
-
   display.clearDisplay();
   display.display();
   display.setTextSize(2); // Draw 2X-scale text
@@ -40,6 +39,7 @@ void lilText(float data)
   delay(100);
   // display.startscrollright(0x00, 0x0F);
 }
+
 
 long lastTime = 0; // Simple local timer. Limits amount if I2C traffic to u-blox module.
 float gpsStuff(struct carData* _bmw)
@@ -151,9 +151,40 @@ void accelTest(struct carData* _bmw)
 
 void packageData(struct carData bmw) //send the car struct to copy the data to one big string payload for the lora transmit funtion
 {
-  char strSpeed[]= "999.99"; //filling with largest num expected
+
+  char strSpeed[7];
+  char strLat[50];
+  char strLon[50];
+  char strGx[50];
+  char strGy[50];
+  char strGz[8];
+  char strTemp[7];
+  char strTime[8];
+
+  dtostrf(bmw.speed, 6, 2, strSpeed);
+  dtostrf(bmw.lati, 18, 7, strLat);
+  dtostrf(bmw.longi, 18, 7, strLon);
+  dtostrf(bmw.gx, 7, 2, strGx);
+  dtostrf(bmw.gy, 7, 2, strGy);
+  dtostrf(bmw.gz, 7, 2, strGz);
+  dtostrf(bmw.temper, 6, 2, strTemp);
+  dtostrf(millis() / 1000.0, 7, 2, strTime);
+
+  int ret = sprintf(output, "speed:%s,lat:%s,lon:%s,gx:%s,gy:%s,gz:%s,temp:%s,sec:%s\n", strSpeed, strLat, strLon, strGx, strGy, strGz, strTemp, strTime);
+
+if (ret < 0) {
+    Serial.println("Error: sprintf failed");
+} else {
+    Serial.println(output);
+    Serial.println("done packing data");
+}
+
+ 
+
+  /*
+    char strSpeed[]= "999.99"; //filling with largest num expected
   char strLat[]= "160759363xxxx"; 
-  char strLat[]= "-970889757xxx";
+  char strLon[]= "-970889757xxx";
   char strGx[]= "-100000";
   char strGy[]= "-100000";
   char strGz[]= "-100000";
@@ -162,7 +193,12 @@ void packageData(struct carData bmw) //send the car struct to copy the data to o
 
   dtostrf(bmw.speed,-5,1,strSpeed );
 
-  sprintf(output,"speed:%s,lat:%s,lon:%s,gx:%s,gy:%s,gz:%s,temp:%s,sec:%s\n",strSpeed,);
+  sprintf(output,"speed:%s,lat:%s,lon:%s,gx:%s,gy:%s,gz:%s,temp:%s,sec:%s\n", bmw.speed, bmw.lati, bmw.longi, bmw.gx, bmw.gy, bmw.gz, bmw.temper, millis()/1000);
+  //Serial.println(output);
+  Serial.println("done packing data");
+  */
+
+
 }
 
 void setup()
@@ -199,6 +235,7 @@ void setup()
   int state = radio.begin(915.0, 500.0, 12, 5, 0x14, 20, 20, 0);
   radio.setRfSwitchPins(pin_rx_enable, pin_tx_enable); //  15, 13
   radio.setCurrentLimit(240);
+  radio.setOutputPower(30); // Set output power to max (30 dBm)
   if (state == RADIOLIB_ERR_NONE)
   {
     Serial.println(F("radio success!"));
@@ -224,12 +261,12 @@ char speed[5]; // 150.5\0
 
 void loop()
 {
-  struct carData bmw;
+  struct carData bmw; 
   
   int radioStatus = -1;
   speedtemp = gpsStuff(&bmw) ; // convert  to mph also store gps data in struct
   lilText(speedtemp);
-  dtostrf(speedtemp,-4,1,speed);
+  //dtostrf(speedtemp,-4,1,speed); // not needed anymore
   sprintf(output,"speed %s",speed); // a way to combine a bunch of data into a char array
   //check out sprintf-arduino https://www.programmingelectronics.com/sprintf-arduino/
   Serial.print("size of payload ");
@@ -239,6 +276,8 @@ void loop()
   Serial.print("structures data ");
   Serial.println(bmw.speed);
   accelTest(&bmw);
+
+  packageData(bmw);
   
   logToSD(speedtemp,bmw,SD); //comenting out due to conflict with radio
   radioStatus = radio.transmit(output);

@@ -38,7 +38,7 @@ void lilText(String data)
   display.println(F(" mph"));
   display.display(); // Show initial text
   delay(100);
-  // display.startscrollright(0x00, 0x0F);
+  display.startscrollright(0x00, 0x0F);
 }
 
 long lastTime = 0; // Simple local timer. Limits amount if I2C traffic to u-blox module.
@@ -146,11 +146,16 @@ char speed[5]; // 150.5\0
 
 struct carData //holds all data about the car
 {
-  long lati =-1;
-  long longi =-1;
-  long speed =-1;
+  float lati =-1; //used to be long datatype
+  float longi =-1;
+  float speed =-1;
   //tireFR = []
   //tireFL  = []
+  float gx = -1;
+  float gy = -1;
+  float gz = -1;
+  float temper = -1;
+
 
 };
 
@@ -179,6 +184,7 @@ void loop()
     // print the data of the packet
     Serial.print(F("[SX1278] Data:\t\t\t"));
     Serial.println(str);
+    Serial.println("end of data package");
 
     lilText(str);
     // print the RSSI (Received Signal Strength Indicator)
