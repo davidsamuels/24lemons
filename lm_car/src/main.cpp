@@ -154,7 +154,7 @@ void packageData(struct carData bmw) //send the car struct to copy the data to o
 
   char strSpeed[7];
   char strLat[50];
-  char strLon[50];
+  char strLon[50]; // need to figure out size based off sparkfun library
   char strGx[50];
   char strGy[50];
   char strGz[8];
@@ -178,25 +178,6 @@ if (ret < 0) {
     Serial.println(output);
     Serial.println("done packing data");
 }
-
- 
-
-  /*
-    char strSpeed[]= "999.99"; //filling with largest num expected
-  char strLat[]= "160759363xxxx"; 
-  char strLon[]= "-970889757xxx";
-  char strGx[]= "-100000";
-  char strGy[]= "-100000";
-  char strGz[]= "-100000";
-  char strTemp[]= "-10000";
-  char strTime[]= "9999999";
-
-  dtostrf(bmw.speed,-5,1,strSpeed );
-
-  sprintf(output,"speed:%s,lat:%s,lon:%s,gx:%s,gy:%s,gz:%s,temp:%s,sec:%s\n", bmw.speed, bmw.lati, bmw.longi, bmw.gx, bmw.gy, bmw.gz, bmw.temper, millis()/1000);
-  //Serial.println(output);
-  Serial.println("done packing data");
-  */
 
 
 }
@@ -279,7 +260,7 @@ void loop()
 
   packageData(bmw);
   
-  logToSD(speedtemp,bmw,SD); //comenting out due to conflict with radio
+  logToSD(speedtemp,bmw,SD); 
   radioStatus = radio.transmit(output);
    if (radioStatus == RADIOLIB_ERR_NONE) {
     // the packet was successfully transmitted
