@@ -11,6 +11,30 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 SFE_UBLOX_GNSS myGNSS;
 SX1276 radio = new Module(pin_cs, pin_dio0, pin_nrst, pin_dio1);
 
+// initalize SD card if it has not alread been setup. write header to file and close
+void SDheader(fs::FS &fs )
+{
+  File file = fs.open("/log.txt", FILE_APPEND);
+    if(!file){
+        Serial.println("Failed to open file for appending");
+        return;
+    }
+    file.print("speed(mph),latitude*10^-7,longitude*10^-7,gforcex(mg),gforcey(mg),gforcez(mg),temp(C),seconds\n");
+    file.close();
+}
+
+void logToSD(fs::FS &fs, String data){
+  
+  File file = fs.open("/log.txt", FILE_APPEND);
+    if(!file){
+        Serial.println("Failed to open file for appending");
+        return;
+    }
+    file.println(data);
+    Serial.println("data sent to sd card");
+    file.close();
+}
+
 void lilText(float data)
 {
 
@@ -101,6 +125,16 @@ void setup()
 {
   // put your setup code here, to run once:
   Serial.begin(115200);
+  SPI.begin();
+   Serial.println("trying sd card");
+  if(!SD.begin(16)){
+        Serial.println("Card Mount Failed");
+  }
+  else
+  {
+    SDheader(SD);
+  }
+
   Serial.println("trying display");
   if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS))
   {
@@ -126,6 +160,7 @@ void setup()
   int state = radio.begin(915.0, 500.0, 12, 5, 0x14, 20, 20, 0);
   radio.setRfSwitchPins(pin_rx_enable, pin_tx_enable); //  15, 13
   radio.setCurrentLimit(240);
+  radio.setOutputPower(30);
   if (state == RADIOLIB_ERR_NONE)
   {
     Serial.println(F("success!"));
@@ -135,6 +170,8 @@ void setup()
     Serial.print(F("failed, code "));
     Serial.println(state);
   }
+
+ 
 
 }
 
@@ -187,6 +224,7 @@ void loop()
     Serial.println("end of data package");
 
     lilText(str);
+    
     // print the RSSI (Received Signal Strength Indicator)
     // of the last received packet
     Serial.print(F("[SX1278] RSSI:\t\t\t"));
@@ -204,6 +242,9 @@ void loop()
     Serial.print(F("[SX1278] Frequency error:\t"));
     Serial.print(radio.getFrequencyError());
     Serial.println(F(" Hz"));
+
+    //log to SD card
+    logToSD(SD,str);
 
   } else if (state == RADIOLIB_ERR_RX_TIMEOUT) {
     // timeout occurred while waiting for a packet

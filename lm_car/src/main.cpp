@@ -50,7 +50,7 @@ float gpsStuff(struct carData* _bmw)
   {
     lastTime = millis(); // Update the timer
 
-    long latitude = myGNSS.getLatitude();
+    long latitude = myGNSS.getLatitude(); // looks like this Lat: 151604970 Long: -693551830 
     Serial.print(F("Lat: "));
     Serial.print(latitude);
 
