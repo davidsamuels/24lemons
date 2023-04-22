@@ -153,17 +153,17 @@ void packageData(struct carData bmw) //send the car struct to copy the data to o
 {
 
   char strSpeed[7];
-  char strLat[50];
-  char strLon[50]; // need to figure out size based off sparkfun library
-  char strGx[50];
-  char strGy[50];
-  char strGz[8];
+  char strLat[11];
+  char strLon[11]; // need to figure out size based off sparkfun library -xxx.xxxxx
+  char strGx[10]; 
+  char strGy[10];
+  char strGz[10];
   char strTemp[7];
   char strTime[8];
 
   dtostrf(bmw.speed, 6, 2, strSpeed);
-  dtostrf(bmw.lati, 18, 7, strLat);
-  dtostrf(bmw.longi, 18, 7, strLon);
+  dtostrf(bmw.lati, 10, 0, strLat);
+  dtostrf(bmw.longi, 10, 0, strLon);
   dtostrf(bmw.gx, 7, 2, strGx);
   dtostrf(bmw.gy, 7, 2, strGy);
   dtostrf(bmw.gz, 7, 2, strGz);
@@ -175,8 +175,9 @@ void packageData(struct carData bmw) //send the car struct to copy the data to o
 if (ret < 0) {
     Serial.println("Error: sprintf failed");
 } else {
-    Serial.println(output);
-    Serial.println("done packing data");
+    Serial.print("packaged data looks like this[");
+    Serial.print(output);
+    Serial.println("]done packing data");
 }
 
 
@@ -250,15 +251,12 @@ void loop()
   //dtostrf(speedtemp,-4,1,speed); // not needed anymore
   sprintf(output,"speed %s",speed); // a way to combine a bunch of data into a char array
   //check out sprintf-arduino https://www.programmingelectronics.com/sprintf-arduino/
-  Serial.print("size of payload ");
-  Serial.print(sizeof(output));
-  Serial.print("payload: ");
-  Serial.println(output);
-  Serial.print("structures data ");
-  Serial.println(bmw.speed);
+  
   accelTest(&bmw);
 
   packageData(bmw);
+
+  
   
   logToSD(speedtemp,bmw,SD); 
   radioStatus = radio.transmit(output);
