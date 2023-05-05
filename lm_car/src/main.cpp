@@ -46,7 +46,7 @@ float gpsStuff(struct carData* _bmw)
 {
   // Query module only every second. Doing it more often will just cause I2C traffic.
   // The module only responds when a new position is available
-  if (millis() - lastTime > 1000)
+  if (millis() - lastTime > 250)
   {
     lastTime = millis(); // Update the timer
 
