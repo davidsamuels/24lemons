@@ -18,6 +18,7 @@ bool GPSHandler::begin()
     return true;
 }
 
+// looks like this Lat: 151604970 Long: -693551830
 float GPSHandler::getAltitude()
 {
     return myGNSS.getAltitude();
@@ -48,7 +49,15 @@ void GPSHandler::updateGPSData()
 
 void GPSHandler::dumpGPSData()
 {
-    char tempGPSDumpBuffer[50];
-    sprintf(tempGPSDumpBuffer,"latitude:[%f] longitude:[%f] speed[%f]mph altitude[%f]",currentLatitude,currentLongitude,currentGroundSpeed,currentAltitude);
-    Serial.println(tempGPSDumpBuffer);
+    char tempGPSDumpBuffer[100];
+    int tempSprintfBuff = 0;
+    tempSprintfBuff = sprintf(tempGPSDumpBuffer, "latitude:[%f] longitude:[%f] speed[%f]mph altitude[%f]", currentLatitude, currentLongitude, currentGroundSpeed, currentAltitude);
+    if (tempSprintfBuff < 0)
+    {
+        Serial.println("error in GPSHandler dumpGPSData function");
+    }
+    else
+    {
+        Serial.println(tempGPSDumpBuffer);
+    }
 }

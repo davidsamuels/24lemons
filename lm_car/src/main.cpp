@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "tiny_lcd.h"
-#include "GPSHandler.h"  //<- currently working on
+#include <SparkFun_u-blox_GNSS_Arduino_Library.h>
 #include "radio.h"
 #include <RadioLib.h>
 #include "FS.h" 
@@ -9,7 +9,7 @@
 #include "SparkFun_LIS2DH12.h" //Click here to get the library: http://librarymanager/All#SparkFun_LIS2DH12
 SPARKFUN_LIS2DH12 accel;       //Create instance
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
-
+SFE_UBLOX_GNSS myGNSS;
 SX1276 radio = new Module(pin_cs, pin_dio0, pin_nrst, pin_dio1);
 //what we give to radio to send out
 char output[256];

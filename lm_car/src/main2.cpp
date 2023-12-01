@@ -5,9 +5,18 @@
 #include "GPSHandler.h"
 GPSHandler gps;
 
+#include "CarRadio.h"
+CarRadio radio;
+
 void setup()
 {
     Serial.begin(115200);
     gps.begin();
+    radio.begin();
+
+}
+
+void loop()
+{
 
 }
