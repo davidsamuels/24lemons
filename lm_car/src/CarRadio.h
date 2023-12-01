@@ -11,7 +11,7 @@ private:
     static const int pin_tx_enable = 13;
     static const int pin_rx_enable = 15;
     static const int pin_nrst = 25;
-    static const int pin_dio1 = 26;         
+    static const int pin_dio1 = 26; 
 
     SX1276* radio;
 
