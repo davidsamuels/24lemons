@@ -8,6 +8,9 @@ GPSHandler gps;
 #include "CarRadio.h"
 CarRadio radio;
 
+#include "CarData.h"
+CarData bmw;
+
 void setup()
 {
     Serial.begin(115200);
