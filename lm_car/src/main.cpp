@@ -23,7 +23,7 @@ void setup()
     Serial.begin(115200);
     Serial.println("booting");
     Wire.begin();
-    //gps.begin(); //not ready to test
+    gps.begin(); //not ready to test
     //radio.begin(); // not ready to test fails state 0
     axl.begin(); //ready to test
 
@@ -41,6 +41,8 @@ void loop()
     Serial.print(bmw.axlY);
     Serial.print(" Z: ");
     Serial.println(bmw.axlZ);
+    gps.updateGPSData(&bmw);
+    gps.dumpGPSData();
     delay(500);
 
 }

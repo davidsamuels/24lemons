@@ -19,8 +19,9 @@ bool GPSHandler::begin()
 }
 
 // looks like this Lat: 151604970 Long: -693551830
-float GPSHandler::getAltitude()
+float GPSHandler::getAltitude() 
 {
+    
     return myGNSS.getAltitude();
 }
 
@@ -39,8 +40,10 @@ float GPSHandler::getGroundSpeed()
     return myGNSS.getGroundSpeed();
 }
 
-void GPSHandler::updateGPSData()
+void GPSHandler::updateGPSData(CarData* carData)
 {
+    carData->lat = myGNSS.getLatitude();
+
     currentLatitude = myGNSS.getLatitude();
     currentLongitude = myGNSS.getLongitude();
     currentGroundSpeed = myGNSS.getGroundSpeed();
@@ -49,7 +52,7 @@ void GPSHandler::updateGPSData()
 
 void GPSHandler::dumpGPSData()
 {
-    char tempGPSDumpBuffer[100];
+    char tempGPSDumpBuffer[500];
     int tempSprintfBuff = 0;
     tempSprintfBuff = sprintf(tempGPSDumpBuffer, "latitude:[%f] longitude:[%f] speed[%f]mph altitude[%f]", currentLatitude, currentLongitude, currentGroundSpeed, currentAltitude);
     if (tempSprintfBuff < 0)

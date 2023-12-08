@@ -3,6 +3,9 @@
 
 class CarData{
 
+    private:
+    
+
     public:
     
     float axlX;

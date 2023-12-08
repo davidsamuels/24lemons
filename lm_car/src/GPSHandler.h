@@ -4,11 +4,13 @@
 // https://www.sparkfun.com/products/15712
 
 #include <SparkFun_u-blox_GNSS_Arduino_Library.h>
+#include "CarData.h"
 
 class GPSHandler {
 
     private:
     SFE_UBLOX_GNSS myGNSS;
+    CarData* carData; //this is what collects all the data
     float currentLatitude =1 ;
     float currentLongitude =1 ;
     float currentAltitude =1 ;
@@ -23,7 +25,7 @@ class GPSHandler {
     float getLongitude();
     float getAltitude();
     float getGroundSpeed();
-    void updateGPSData();
+    void updateGPSData(CarData* carData);
     void dumpGPSData();
 
     //track lap time
