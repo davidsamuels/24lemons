@@ -47,13 +47,14 @@ void GPSHandler::updateGPSData(CarData* carData)
     currentLatitude = myGNSS.getLatitude();
     currentLongitude = myGNSS.getLongitude();
     currentGroundSpeed = myGNSS.getGroundSpeed();
-    currentAltitude = myGNSS.getAltitude();
+    currentAltitude = myGNSS.getAltitude(); //
 }
 
 void GPSHandler::dumpGPSData()
 {
     char tempGPSDumpBuffer[500];
     int tempSprintfBuff = 0;
+    //strongly consider changing to snprintf
     tempSprintfBuff = sprintf(tempGPSDumpBuffer, "latitude:[%f] longitude:[%f] speed[%f]mph altitude[%f]", currentLatitude, currentLongitude, currentGroundSpeed, currentAltitude);
     if (tempSprintfBuff < 0)
     {

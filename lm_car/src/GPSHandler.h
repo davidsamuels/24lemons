@@ -13,7 +13,7 @@ class GPSHandler {
     CarData* carData; //this is what collects all the data
     float currentLatitude =1 ;
     float currentLongitude =1 ;
-    float currentAltitude =1 ;
+    float currentAltitude =1 ; //in meters
     float currentGroundSpeed = -1;
 
     public:

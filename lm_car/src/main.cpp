@@ -41,6 +41,7 @@ void loop()
     Serial.print(bmw.axlY);
     Serial.print(" Z: ");
     Serial.println(bmw.axlZ);
+    
     gps.updateGPSData(&bmw);
     gps.dumpGPSData();
     delay(500);
