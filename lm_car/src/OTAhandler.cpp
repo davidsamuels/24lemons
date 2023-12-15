@@ -10,11 +10,12 @@ void OTAHandler::setupWiFi() {
         Serial.println("Connecting to WiFi...");
     }
     Serial.println("Connected to WiFi");
+    Serial.println(WiFi.localIP());
 }
 
 void OTAHandler::setupOTA() {
     // Initialize and configure ArduinoOTA
-    ArduinoOTA.setHostname("esp32-ota");
+    ArduinoOTA.setHostname("esp32-ota-car");
 
     ArduinoOTA.onStart([]() {
         String type;

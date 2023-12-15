@@ -2,6 +2,7 @@
 #define OTA_HANDLER_H
 
 #include <ArduinoOTA.h>
+#include <ESPmDNS.h>
 #include <WiFi.h>
 
 class OTAHandler

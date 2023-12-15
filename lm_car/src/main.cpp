@@ -31,6 +31,7 @@ void setup()
     gps.begin();   // not ready to test
    // radio.begin(); // not ready to test fails state 0
     axl.begin();   // ready to test
+    Serial.println("\n\n we have made a change from wifi \n\n");
 }
 
 void loop()
@@ -46,6 +47,8 @@ void loop()
     Serial.print(bmw.axlY);
     Serial.print(" Z: ");
     Serial.println(bmw.axlZ);
+
+    Serial.println("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
 
     gps.updateGPSData(&bmw);
     gps.dumpGPSData();
