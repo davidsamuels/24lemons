@@ -21,7 +21,7 @@ public:
     CarRadio();
     ~CarRadio();
     bool begin();
-    bool tx();
+    bool tx(String payload);
     bool rx();
     
 };

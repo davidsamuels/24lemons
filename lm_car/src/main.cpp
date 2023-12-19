@@ -33,7 +33,7 @@ void setup()
     axl.begin();   // ready to test
   
 }
-
+int count = 0;
 void loop()
 {
     ota.handleOTA();
@@ -49,5 +49,9 @@ void loop()
     Serial.println(bmw.axlZ);
     gps.updateGPSData(&bmw);
     gps.dumpGPSData();
+
+     String str = "Hello World! #" + String(count++);
+     radio.tx(str);
+    
     delay(500);
 }

@@ -42,3 +42,9 @@ bool CarRadio::begin()
 
     return true;
 }
+
+bool CarRadio::tx(String payload)
+{
+    radio->transmit(payload);
+    return true;
+}
