@@ -1,4 +1,4 @@
-// cleaner version of main which will get renamed back to main when done
+// esp32 based project using platform io inside of vscode.
 //
 #include <Arduino.h>
 
@@ -29,15 +29,15 @@ void setup()
     ota.setupWiFi();
     ota.setupOTA();
     gps.begin();   // not ready to test
-   // radio.begin(); // not ready to test fails state 0
+    radio.begin(); // if else statement is acting very weird
     axl.begin();   // ready to test
-    Serial.println("\n\n we have made a change from wifi \n\n");
+  
 }
 
 void loop()
 {
     ota.handleOTA();
-
+    
     axl.updateVals(&bmw);
 
     // Print the accelerometer data to the Serial Monitor
@@ -47,9 +47,6 @@ void loop()
     Serial.print(bmw.axlY);
     Serial.print(" Z: ");
     Serial.println(bmw.axlZ);
-
-    Serial.println("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
-
     gps.updateGPSData(&bmw);
     gps.dumpGPSData();
     delay(500);

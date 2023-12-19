@@ -13,6 +13,8 @@ private:
     static const int pin_nrst = 25;
     static const int pin_dio1 = 26; 
 
+    
+
     SX1276* radio;
 
 public:
@@ -21,6 +23,7 @@ public:
     bool begin();
     bool tx();
     bool rx();
+    
 };
 
 #endif // RADIOHELPER_H

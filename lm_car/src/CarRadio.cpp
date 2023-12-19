@@ -29,10 +29,16 @@ bool CarRadio::begin()
     if (state == RADIOLIB_ERR_NONE)
     {
         Serial.println(F("radio success!"));
+        
     }
     else
     {
-        Serial.print(F("radio failed, code "));
+        
+        Serial.print(F("radio failed!, code "));
         Serial.println(state);
+        
+        return false;
     }
+
+    return true;
 }
