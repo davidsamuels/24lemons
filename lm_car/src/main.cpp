@@ -28,30 +28,22 @@ void setup()
     Wire.begin();
     ota.setupWiFi();
     ota.setupOTA();
-    gps.begin();   // not ready to test
-    radio.begin(); // if else statement is acting very weird
-    axl.begin();   // ready to test
-  
+    gps.begin();   //
+    radio.begin(); //
+    axl.begin();   //
 }
 int count = 0;
 void loop()
 {
-    ota.handleOTA();
-    
-    axl.updateVals(&bmw);
-
-    // Print the accelerometer data to the Serial Monitor
-    Serial.print("X: ");
-    Serial.print(bmw.axlX);
-    Serial.print(" Y: ");
-    Serial.print(bmw.axlY);
-    Serial.print(" Z: ");
-    Serial.println(bmw.axlZ);
-    gps.updateGPSData(&bmw);
+    ota.handleOTA();         // needed for the microcontroller to not miss a wifi update request
+    axl.updateVals(&bmw);    // grab data from the accelerometer and put it in the bmw object which stores all car relavant data
+    gps.updateGPSData(&bmw); // get gps coords and speed
     gps.dumpGPSData();
 
-     String str = "Hello World! #" + String(count++);
-     radio.tx(str);
-    
+    String str = "Hello World! #" + String(count++);
+    radio.tx(str);
+
     delay(500);
+
+    
 }

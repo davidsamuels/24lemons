@@ -13,6 +13,9 @@ private:
     static const int pin_nrst = 25;
     static const int pin_dio1 = 26; 
 
+    static volatile bool transmittedFlag ;
+    static void setFlag();
+
     
 
     SX1276* radio;
@@ -21,7 +24,7 @@ public:
     CarRadio();
     ~CarRadio();
     bool begin();
-    bool tx(String payload);
+    bool tx(String payload); // implement as not blocking
     bool rx();
     
 };

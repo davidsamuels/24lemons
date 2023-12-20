@@ -1,15 +1,24 @@
 #include "CarRadio.h"
 
+volatile bool CarRadio::transmittedFlag = false; //
 
-CarRadio::CarRadio() {
-    Module* mod = new Module(pin_cs, pin_dio0, pin_nrst, pin_dio1);
+CarRadio::CarRadio()
+{
+    Module *mod = new Module(pin_cs, pin_dio0, pin_nrst, pin_dio1);
     radio = new SX1276(mod);
 }
 
-CarRadio::~CarRadio() {
+CarRadio::~CarRadio()
+{
     delete radio->getMod();
     delete radio;
 }
+
+void CarRadio::setFlag()
+{
+   transmittedFlag = true;
+}
+
 bool CarRadio::begin()
 {
     Serial.println("trying lora radio ");
@@ -26,17 +35,19 @@ bool CarRadio::begin()
     radio->setRfSwitchPins(pin_rx_enable, pin_tx_enable);
     radio->setCurrentLimit(240);
     radio->setOutputPower(30); // Set output power to max (30 dBm)
+
+    radio->setPacketSentAction(setFlag);
+
     if (state == RADIOLIB_ERR_NONE)
     {
         Serial.println(F("radio success!"));
-        
     }
     else
     {
-        
+
         Serial.print(F("radio failed!, code "));
         Serial.println(state);
-        
+
         return false;
     }
 
