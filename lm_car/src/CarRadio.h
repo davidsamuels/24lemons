@@ -3,6 +3,10 @@
 
 #include <RadioLib.h>
 
+#if defined(ESP8266) || defined(ESP32) // i dont know what this does
+  ICACHE_RAM_ATTR
+#endif
+
 //holds the functionality of the lora radio on function zero of the micromod board
 class CarRadio {
 private:
@@ -13,7 +17,9 @@ private:
     static const int pin_nrst = 25;
     static const int pin_dio1 = 26; 
 
-    static volatile bool transmittedFlag ;
+    static volatile bool transmittedFlag ;// used to flag if the radio has finished so the rest of the program can continue
+    static volatile int transmissionState; 
+
     static void setFlag();
 
     

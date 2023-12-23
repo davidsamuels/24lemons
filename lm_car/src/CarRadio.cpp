@@ -1,6 +1,8 @@
 #include "CarRadio.h"
 
-volatile bool CarRadio::transmittedFlag = false; //
+volatile bool CarRadio::transmittedFlag = true; // https://github.com/jgromes/RadioLib/blob/master/examples/SX127x/SX127x_Transmit_Interrupt/SX127x_Transmit_Interrupt.ino
+volatile int CarRadio::transmissionState = 0; // 0 is for all good
+
 
 CarRadio::CarRadio()
 {
@@ -16,7 +18,7 @@ CarRadio::~CarRadio()
 
 void CarRadio::setFlag()
 {
-   transmittedFlag = true;
+    transmittedFlag = true;
 }
 
 bool CarRadio::begin()
@@ -56,6 +58,25 @@ bool CarRadio::begin()
 
 bool CarRadio::tx(String payload)
 {
-    radio->transmit(payload);
+    if (transmittedFlag)
+    {
+        transmittedFlag = false;
+        transmissionState = radio->startTransmit(payload); // this is the nonblocking version which changes the transmittedFlag when done
+
+        if (transmissionState == RADIOLIB_ERR_NONE) //these are of the last transmission
+        {
+            Serial.println(F("transmission success!"));
+        }
+        else
+        {
+            Serial.print(F("failed, code "));
+            Serial.println(transmissionState);
+        }
+
+        radio->finishTransmit();
+
+    }
+
+    // radio->transmit(payload);
     return true;
 }
