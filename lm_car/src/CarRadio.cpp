@@ -66,17 +66,21 @@ bool CarRadio::tx(String payload)
         if (transmissionState == RADIOLIB_ERR_NONE) //these are of the last transmission
         {
             Serial.println(F("transmission success!"));
+            return true;
         }
         else
         {
             Serial.print(F("failed, code "));
             Serial.println(transmissionState);
+            return false;
         }
 
-        //radio->finishTransmit();
+        //radio->finishTransmit(); // this will kill the transmission early if you let it
 
     }
 
+    Serial.println("radio busy");
+
     // radio->transmit(payload);
-    return true;
+    return false;
 }
