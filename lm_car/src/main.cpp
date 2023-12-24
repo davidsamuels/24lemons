@@ -43,7 +43,7 @@ void loop()
     String str = "Hello World! #" + String(count++);
     radio.tx(str);
 
-    delay(500);
+    delay(1000);
 
     
 }
