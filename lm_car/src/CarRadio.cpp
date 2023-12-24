@@ -73,7 +73,7 @@ bool CarRadio::tx(String payload)
             Serial.println(transmissionState);
         }
 
-        radio->finishTransmit();
+        //radio->finishTransmit();
 
     }
 
