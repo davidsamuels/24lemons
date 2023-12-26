@@ -38,7 +38,7 @@ void loop()
     ota.handleOTA();         // needed for the microcontroller to not miss a wifi update request
     axl.updateVals(&bmw);    // grab data from the accelerometer and put it in the bmw object which stores all car relavant data
     gps.updateGPSData(&bmw); // get gps coords and speed
-    gps.dumpGPSData();
+    gps.dumpGPSData(&bmw);
 
     String str = "Hello World! #" + String(count++);
     radio.tx(str);

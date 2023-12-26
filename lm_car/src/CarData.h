@@ -12,7 +12,7 @@ class CarData{
     float axlY;
     float axlZ;
 
-    float lat;
+    float lat; // looks like this Lat: 151604970 Long: -693551830 
     float lon;
     float alt;
     float groundSpeed;

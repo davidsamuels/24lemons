@@ -26,7 +26,7 @@ class GPSHandler {
     float getAltitude();
     float getGroundSpeed();
     void updateGPSData(CarData* carData);
-    void dumpGPSData();
+    void dumpGPSData(CarData* carData);
 
     //track lap time
     //fastest speed

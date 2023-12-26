@@ -42,20 +42,21 @@ float GPSHandler::getGroundSpeed()
 
 void GPSHandler::updateGPSData(CarData* carData)
 {
+    //store the data in the car object
     carData->lat = myGNSS.getLatitude();
+    carData->lon = myGNSS.getLongitude();
+    carData->alt = myGNSS.getAltitude();
+    carData->groundSpeed = myGNSS.getGroundSpeed()/447.04; //convert to mph
 
-    currentLatitude = myGNSS.getLatitude();
-    currentLongitude = myGNSS.getLongitude();
-    currentGroundSpeed = myGNSS.getGroundSpeed();
-    currentAltitude = myGNSS.getAltitude(); //
+    
 }
 
-void GPSHandler::dumpGPSData()
+void GPSHandler::dumpGPSData(CarData* carData)
 {
     char tempGPSDumpBuffer[500];
     int tempSprintfBuff = 0;
     //strongly consider changing to snprintf
-    tempSprintfBuff = sprintf(tempGPSDumpBuffer, "latitude:[%f] longitude:[%f] speed[%f]mph altitude[%f]", currentLatitude, currentLongitude, currentGroundSpeed, currentAltitude);
+    tempSprintfBuff = sprintf(tempGPSDumpBuffer, "latitude:[%f] longitude:[%f] speed[%f]mph altitude[%f]", carData->lat, carData->lon, carData->groundSpeed, carData->alt);
     if (tempSprintfBuff < 0)
     {
         Serial.println("error in GPSHandler dumpGPSData function");
